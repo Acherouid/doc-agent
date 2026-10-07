@@ -1,0 +1,192 @@
+{
+  "llm": "gemini/gemini-3.8-flash",
+  "summary": {
+    "invoices": 12,
+    "evaluated": 12,
+    "crashed": 0,
+    "field_accuracy_pct": 100.0,
+    "fields_correct": 96,
+    "fields_total": 96,
+    "auto_approved_pct": 75.0,
+    "faulty_total": 3,
+    "faulty_evaluated": 3,
+    "faulty_routed_correctly": 3,
+    "clean_sent_to_review": 0
+  },
+  "results": [
+    {
+      "file": "invoice_01_atlas_fournitures_industrielles_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 5.5
+    },
+    {
+      "file": "invoice_02_maghreb_logistique_transport_sa.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 6.4
+    },
+    {
+      "file": "invoice_03_sahara_tech_solutions_sarl_au.pdf",
+      "evaluated": true,
+      "status": "needs_human_review",
+      "attempts": 2,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [
+        "total_ht + tva does not equal total_ttc"
+      ],
+      "crash": null,
+      "faulty": true,
+      "routed_correctly": true,
+      "seconds": 8.9
+    },
+    {
+      "file": "invoice_04_nador_emballages_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 3.4
+    },
+    {
+      "file": "invoice_05_dar_al_imprimerie_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 5.5
+    },
+    {
+      "file": "invoice_06_souss_agro_distribution_sa.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 7.6
+    },
+    {
+      "file": "invoice_07_rif_building_materials_sarl.pdf",
+      "evaluated": true,
+      "status": "needs_human_review",
+      "attempts": 2,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [
+        "ICE must be exactly 15 digits"
+      ],
+      "crash": null,
+      "faulty": true,
+      "routed_correctly": true,
+      "seconds": 9.7
+    },
+    {
+      "file": "invoice_08_marrakech_office_pro_sarl.pdf",
+      "evaluated": true,
+      "status": "needs_human_review",
+      "attempts": 2,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [
+        "invoice_number is missing"
+      ],
+      "crash": null,
+      "faulty": true,
+      "routed_correctly": true,
+      "seconds": 11.4
+    },
+    {
+      "file": "invoice_09_oriental_cleaning_services_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 5.0
+    },
+    {
+      "file": "invoice_10_meknes_pieces_auto_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 5.4
+    },
+    {
+      "file": "invoice_11_anfa_consulting_group_sa.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 3.3
+    },
+    {
+      "file": "invoice_12_zagora_solar_energy_sarl.pdf",
+      "evaluated": true,
+      "status": "auto_approved",
+      "attempts": 1,
+      "fields_correct": 8,
+      "fields_total": 8,
+      "wrong_fields": [],
+      "agent_errors": [],
+      "crash": null,
+      "faulty": false,
+      "routed_correctly": null,
+      "seconds": 4.5
+    }
+  ]
+}
