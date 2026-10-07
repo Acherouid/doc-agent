@@ -1,0 +1,449 @@
+{
+  "invoice_01_atlas_fournitures_industrielles_sarl.pdf": {
+    "supplier_name": "Atlas Fournitures Industrielles SARL",
+    "ice": "009505701000724",
+    "invoice_number": "FA-2026-0780",
+    "date": "2026-05-25",
+    "due_date": "2026-06-24",
+    "language": "fr",
+    "template": "A",
+    "currency": "MAD",
+    "client_name": "Groupe Chaouia Distribution SA",
+    "client_ice": "008941448000357",
+    "line_items": [
+      {
+        "description": "Huile hydraulique ISO 46 (fût 20 L)",
+        "quantity": 5,
+        "unit_price": 813.5,
+        "line_total": 4067.5
+      },
+      {
+        "description": "Casque de chantier homologué",
+        "quantity": 42,
+        "unit_price": 71.5,
+        "line_total": 3003.0
+      },
+      {
+        "description": "Roulement à billes 6205-2RS",
+        "quantity": 12,
+        "unit_price": 63.0,
+        "line_total": 756.0
+      }
+    ],
+    "total_ht": 7826.5,
+    "tva": 1565.3,
+    "total_ttc": 9391.8
+  },
+  "invoice_02_maghreb_logistique_transport_sa.pdf": {
+    "supplier_name": "Maghreb Logistique & Transport SA",
+    "ice": "009141642000102",
+    "invoice_number": "INV-000219",
+    "date": "2025-11-09",
+    "due_date": "2025-12-09",
+    "language": "en",
+    "template": "B",
+    "currency": "MAD",
+    "client_name": "Hôtel Riad Zitoun SARL",
+    "client_ice": "004646630000149",
+    "line_items": [
+      {
+        "description": "Customs clearance fee",
+        "quantity": 1,
+        "unit_price": 848.5,
+        "line_total": 848.5
+      },
+      {
+        "description": "Pallet storage (per month)",
+        "quantity": 20,
+        "unit_price": 117.0,
+        "line_total": 2340.0
+      },
+      {
+        "description": "Pallet freight Casablanca - Tangier",
+        "quantity": 3,
+        "unit_price": 5321.5,
+        "line_total": 15964.5
+      },
+      {
+        "description": "Refrigerated truck rental (per day)",
+        "quantity": 5,
+        "unit_price": 3014.5,
+        "line_total": 15072.5
+      }
+    ],
+    "total_ht": 34225.5,
+    "tva": 6845.1,
+    "total_ttc": 41070.6
+  },
+  "invoice_03_sahara_tech_solutions_sarl_au.pdf": {
+    "supplier_name": "Sahara Tech Solutions SARL AU",
+    "ice": "009614221000545",
+    "invoice_number": "2026/0283",
+    "date": "2026-01-01",
+    "due_date": "2026-01-31",
+    "language": "fr",
+    "template": "C",
+    "currency": "MAD",
+    "client_name": "Clinique Al Amal SA",
+    "client_ice": "003129157000068",
+    "line_items": [
+      {
+        "description": "Maintenance serveur mensuelle",
+        "quantity": 1,
+        "unit_price": 4520.0,
+        "line_total": 4520.0
+      },
+      {
+        "description": "Câblage réseau Cat6 (point)",
+        "quantity": 52,
+        "unit_price": 515.0,
+        "line_total": 26780.0
+      }
+    ],
+    "total_ht": 31300.0,
+    "tva": 6260.0,
+    "total_ttc": 37635.0,
+    "expected_error": "TOTAL_MISMATCH: total_ht (31300.00) + tva (6260.00) = 37560.00, but the printed total_ttc is 37635.00"
+  },
+  "invoice_04_nador_emballages_sarl.pdf": {
+    "supplier_name": "Nador Emballages SARL",
+    "ice": "002794283000892",
+    "invoice_number": "F202500291",
+    "date": "2025-12-09",
+    "due_date": "2026-01-08",
+    "language": "fr",
+    "template": "A",
+    "currency": "MAD",
+    "client_name": "Coopérative Agricole Doukkala",
+    "client_ice": "005528405000372",
+    "line_items": [
+      {
+        "description": "Palette bois EUR 1200x800",
+        "quantity": 101,
+        "unit_price": 70.0,
+        "line_total": 7070.0
+      },
+      {
+        "description": "Sachets alimentaires (lot de 1000)",
+        "quantity": 15,
+        "unit_price": 130.0,
+        "line_total": 1950.0
+      },
+      {
+        "description": "Film étirable 50 cm (bobine)",
+        "quantity": 96,
+        "unit_price": 71.5,
+        "line_total": 6864.0
+      },
+      {
+        "description": "Ruban adhésif (carton de 36)",
+        "quantity": 25,
+        "unit_price": 191.5,
+        "line_total": 4787.5
+      },
+      {
+        "description": "Carton ondulé 60x40x40 cm",
+        "quantity": 281,
+        "unit_price": 6.5,
+        "line_total": 1826.5
+      }
+    ],
+    "total_ht": 22498.0,
+    "tva": 4499.6,
+    "total_ttc": 26997.6
+  },
+  "invoice_05_dar_al_imprimerie_sarl.pdf": {
+    "supplier_name": "Dar Al Imprimerie SARL",
+    "ice": "006886999000136",
+    "invoice_number": "FA-2025-0879",
+    "date": "2025-10-07",
+    "due_date": "2025-11-06",
+    "language": "fr",
+    "template": "B",
+    "currency": "MAD",
+    "client_name": "Cimenterie du Nord SA",
+    "client_ice": "000388310000671",
+    "line_items": [
+      {
+        "description": "Impression brochure A4 (1000 ex.)",
+        "quantity": 1,
+        "unit_price": 2141.0,
+        "line_total": 2141.0
+      },
+      {
+        "description": "Cartes de visite (lot de 500)",
+        "quantity": 8,
+        "unit_price": 169.0,
+        "line_total": 1352.0
+      },
+      {
+        "description": "Affiches A2 (lot de 50)",
+        "quantity": 4,
+        "unit_price": 945.0,
+        "line_total": 3780.0
+      }
+    ],
+    "total_ht": 7273.0,
+    "tva": 1454.6,
+    "total_ttc": 8727.6
+  },
+  "invoice_06_souss_agro_distribution_sa.pdf": {
+    "supplier_name": "Souss Agro Distribution SA",
+    "ice": "002027634000939",
+    "invoice_number": "INV-000280",
+    "date": "2025-11-28",
+    "due_date": "2025-12-28",
+    "language": "en",
+    "template": "C",
+    "currency": "MAD",
+    "client_name": "Restaurant Le Jardin SARL",
+    "client_ice": "001011920000853",
+    "line_items": [
+      {
+        "description": "50% shade net (roll)",
+        "quantity": 6,
+        "unit_price": 1759.5,
+        "line_total": 10557.0
+      },
+      {
+        "description": "NPK 15-15-15 fertiliser (50 kg bag)",
+        "quantity": 178,
+        "unit_price": 347.0,
+        "line_total": 61766.0
+      },
+      {
+        "description": "Drip irrigation pipe (500 m roll)",
+        "quantity": 8,
+        "unit_price": 1305.5,
+        "line_total": 10444.0
+      },
+      {
+        "description": "1.5 kW submersible pump",
+        "quantity": 1,
+        "unit_price": 2552.0,
+        "line_total": 2552.0
+      }
+    ],
+    "total_ht": 85319.0,
+    "tva": 17063.8,
+    "total_ttc": 102382.8
+  },
+  "invoice_07_rif_building_materials_sarl.pdf": {
+    "supplier_name": "Rif Building Materials SARL",
+    "ice": "00148604000358",
+    "invoice_number": "2026/0796",
+    "date": "2026-04-20",
+    "due_date": "2026-05-20",
+    "language": "en",
+    "template": "A",
+    "currency": "MAD",
+    "client_name": "Atelier Zellige d'Or SARL",
+    "client_ice": "002872462000447",
+    "line_items": [
+      {
+        "description": "CPJ 45 cement (50 kg bag)",
+        "quantity": 134,
+        "unit_price": 65.0,
+        "line_total": 8710.0
+      },
+      {
+        "description": "Exterior paint (25 kg bucket)",
+        "quantity": 25,
+        "unit_price": 433.5,
+        "line_total": 10837.5
+      }
+    ],
+    "total_ht": 19547.5,
+    "tva": 3909.5,
+    "total_ttc": 23457.0,
+    "expected_error": "INVALID_ICE: printed ICE has 14 digits, a valid ICE has exactly 15 digits"
+  },
+  "invoice_08_marrakech_office_pro_sarl.pdf": {
+    "supplier_name": "Marrakech Office Pro SARL",
+    "ice": "008946087000178",
+    "invoice_number": null,
+    "date": "2026-05-02",
+    "due_date": "2026-06-01",
+    "language": "fr",
+    "template": "B",
+    "currency": "MAD",
+    "client_name": "Laiterie Tafilalet SA",
+    "client_ice": "002704071000406",
+    "line_items": [
+      {
+        "description": "Classeurs à levier (lot de 10)",
+        "quantity": 20,
+        "unit_price": 91.5,
+        "line_total": 1830.0
+      },
+      {
+        "description": "Chaise de bureau ergonomique",
+        "quantity": 7,
+        "unit_price": 1113.5,
+        "line_total": 7794.5
+      },
+      {
+        "description": "Ramette papier A4 80 g",
+        "quantity": 348,
+        "unit_price": 44.5,
+        "line_total": 15486.0
+      },
+      {
+        "description": "Toner imprimante noir",
+        "quantity": 10,
+        "unit_price": 462.0,
+        "line_total": 4620.0
+      },
+      {
+        "description": "Bureau 140 cm",
+        "quantity": 16,
+        "unit_price": 1968.5,
+        "line_total": 31496.0
+      }
+    ],
+    "total_ht": 61226.5,
+    "tva": 12245.3,
+    "total_ttc": 73471.8,
+    "expected_error": "MISSING_INVOICE_NUMBER: no invoice number is printed on the document"
+  },
+  "invoice_09_oriental_cleaning_services_sarl.pdf": {
+    "supplier_name": "Oriental Cleaning Services SARL",
+    "ice": "001034247000518",
+    "invoice_number": "FA-2026-0832",
+    "date": "2026-06-28",
+    "due_date": "2026-07-28",
+    "language": "fr",
+    "template": "C",
+    "currency": "MAD",
+    "client_name": "Pharmacie Centrale du Sud SARL",
+    "client_ice": "006972229000936",
+    "line_items": [
+      {
+        "description": "Lavage de vitres (forfait)",
+        "quantity": 1,
+        "unit_price": 1397.5,
+        "line_total": 1397.5
+      },
+      {
+        "description": "Désinfection des locaux (intervention)",
+        "quantity": 4,
+        "unit_price": 2048.0,
+        "line_total": 8192.0
+      },
+      {
+        "description": "Produit sol concentré (bidon 5 L)",
+        "quantity": 37,
+        "unit_price": 145.0,
+        "line_total": 5365.0
+      }
+    ],
+    "total_ht": 14954.5,
+    "tva": 2990.9,
+    "total_ttc": 17945.4
+  },
+  "invoice_10_meknes_pieces_auto_sarl.pdf": {
+    "supplier_name": "Meknès Pièces Auto SARL",
+    "ice": "004556427000149",
+    "invoice_number": "INV-000247",
+    "date": "2026-05-27",
+    "due_date": "2026-06-26",
+    "language": "fr",
+    "template": "A",
+    "currency": "MAD",
+    "client_name": "Société Bouregreg Immobilier SA",
+    "client_ice": "006312559000996",
+    "line_items": [
+      {
+        "description": "Kit courroie de distribution",
+        "quantity": 6,
+        "unit_price": 741.0,
+        "line_total": 4446.0
+      },
+      {
+        "description": "Filtre à huile",
+        "quantity": 55,
+        "unit_price": 67.0,
+        "line_total": 3685.0
+      },
+      {
+        "description": "Amortisseur avant",
+        "quantity": 15,
+        "unit_price": 638.0,
+        "line_total": 9570.0
+      },
+      {
+        "description": "Plaquettes de frein avant (jeu)",
+        "quantity": 30,
+        "unit_price": 389.5,
+        "line_total": 11685.0
+      }
+    ],
+    "total_ht": 29386.0,
+    "tva": 5877.2,
+    "total_ttc": 35263.2
+  },
+  "invoice_11_anfa_consulting_group_sa.pdf": {
+    "supplier_name": "Anfa Consulting Group SA",
+    "ice": "004279781000131",
+    "invoice_number": "2026/0517",
+    "date": "2026-05-05",
+    "due_date": "2026-06-04",
+    "language": "en",
+    "template": "B",
+    "currency": "MAD",
+    "client_name": "Transports Oum Rbia SARL",
+    "client_ice": "006880186000553",
+    "line_items": [
+      {
+        "description": "Accounting audit (man-day)",
+        "quantity": 4,
+        "unit_price": 5030.5,
+        "line_total": 20122.0
+      },
+      {
+        "description": "Management training (day)",
+        "quantity": 4,
+        "unit_price": 6801.0,
+        "line_total": 27204.0
+      }
+    ],
+    "total_ht": 47326.0,
+    "tva": 9465.2,
+    "total_ttc": 56791.2
+  },
+  "invoice_12_zagora_solar_energy_sarl.pdf": {
+    "supplier_name": "Zagora Solar Energy SARL",
+    "ice": "001883469000622",
+    "invoice_number": "F202600775",
+    "date": "2026-05-07",
+    "due_date": "2026-06-06",
+    "language": "fr",
+    "template": "C",
+    "currency": "MAD",
+    "client_name": "École Supérieure Al Khawarizmi",
+    "client_ice": "009309858000234",
+    "line_items": [
+      {
+        "description": "Panneau solaire 450 W",
+        "quantity": 76,
+        "unit_price": 2421.0,
+        "line_total": 183996.0
+      },
+      {
+        "description": "Batterie lithium 5 kWh",
+        "quantity": 4,
+        "unit_price": 15155.0,
+        "line_total": 60620.0
+      },
+      {
+        "description": "Onduleur hybride 5 kW",
+        "quantity": 3,
+        "unit_price": 11788.5,
+        "line_total": 35365.5
+      }
+    ],
+    "total_ht": 279981.5,
+    "tva": 55996.3,
+    "total_ttc": 335977.8
+  }
+}
