@@ -1,6 +1,6 @@
 # doc-agent : un agent de factures qui sait quand ne pas se fier à lui-même
 
-**Démo en ligne :** [___.streamlit.app](https://___.streamlit.app) · **Vidéo de 2 min :** [voir](___)
+**Démo en ligne :** [doc-agent-vr8wj6s9icwoggw7afk4nv.streamlit.app](https://___.streamlit.app) · **Vidéo de 2 min :** [voir](___)
 
 > La démo gratuite se met en veille après une période d'inactivité : le premier chargement peut prendre quelques secondes.
 
