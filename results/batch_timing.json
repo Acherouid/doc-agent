@@ -1,0 +1,23 @@
+{
+  {
+    "invoices": 12,
+    "concurrency": 4,
+    "sync_seconds": 80.9,
+    "async_seconds": 20.5,
+    "speedup": 3.9
+  },
+  {
+    "invoices": 12,
+    "concurrency": 4,
+    "sync_seconds": 86.6,
+    "async_seconds": 19.6,
+    "speedup": 4.4
+  },
+  {
+    "invoices": 12,
+    "concurrency": 4,
+    "sync_seconds": 74.9,
+    "async_seconds": 20.6,
+    "speedup": 3.6
+  }
+}

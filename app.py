@@ -136,3 +136,140 @@ if r:
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
         st.success("Saved to results/approved.jsonl")
         del st.session_state["result"]
+
+# *************************************************************
+
+import glob
+import json
+import os
+import time
+from datetime import datetime, timezone
+
+import pymupdf
+import streamlit as st
+
+from agent import app as agent_app, pdf_to_text
+
+REPO_URL = "https://github.com/Acherouid/doc-agent"
+MAX_MB, MAX_PAGES = 2, 2
+os.makedirs("results", exist_ok=True)
+
+st.set_page_config(page_title="doc-agent : traitement de factures", layout="wide")
+
+# ---------- Sidebar: explain the pipeline ----------
+with st.sidebar:
+    st.header("Comment ça marche")
+    st.markdown(
+        "1. **Extraction** : le modèle lit la facture et renvoie des champs structurés.\n"
+        "2. **Contrôle** : le code vérifie HT + TVA = TTC, le format de l\'ICE (15 chiffres) et le numéro de facture.\n"
+        "3. **Nouvel essai** : les erreurs sont renvoyées une fois au modèle pour qu\'il se corrige.\n"
+        "4. **Aiguillage** : facture conforme → approuvée automatiquement. Toujours en erreur → vérification humaine."
+    )
+    st.markdown(f"[Code source sur GitHub]({REPO_URL})")
+    st.caption("Jeu de test : 12 factures marocaines synthétiques (dont 3 volontairement erronées).")
+
+st.title("Agent de traitement de factures")
+st.caption("Extraire → contrôler → réessayer → approuver, ou transmettre à une personne")
+
+# ---------- Input ----------
+samples = sorted(glob.glob("data/invoices/*.pdf"))
+choice = st.selectbox("Choisissez une facture d'exemple", samples, format_func=os.path.basename)
+upload = st.file_uploader(
+    f"…ou téléversez votre propre PDF (max {MAX_PAGES} pages, {MAX_MB} Mo)", type=["pdf"]
+)
+
+def safe_float(val, default=0.0) -> float:
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return default
+    
+def text_from_upload(file) -> str:
+    raw = file.getvalue()
+    if len(raw) > MAX_MB * 1024 * 1024:
+        raise ValueError(f"Le fichier dépasse {MAX_MB} Mo.")
+    with pymupdf.open(stream=raw, filetype="pdf") as doc:
+        if doc.page_count > MAX_PAGES:
+            raise ValueError(f"Le PDF compte {doc.page_count} pages ; la limite est de {MAX_PAGES}.")
+        return "\n".join(page.get_text() for page in doc)
+
+
+if st.button("Traiter la facture", type="primary"):
+    try:
+        if upload is not None:
+            text, source = text_from_upload(upload), upload.name
+        else:
+            text, source = pdf_to_text(choice), os.path.basename(choice)
+
+        if len(text.strip()) < 50:
+            st.warning("Presque aucun texte trouvé. Il s'agit probablement d'un PDF scanné ; l'OCR n'est pas encore dans cette version.")
+            st.stop()
+
+        with st.spinner("Agent en cours d'exécution…"):
+            t0 = time.perf_counter()
+            result = agent_app.invoke({"text": text})
+            seconds = time.perf_counter() - t0
+
+        st.session_state["result"] = {
+            "source": source,
+            "status": result.get("status"),
+            "attempts": result.get("attempts"),
+            "errors": result.get("errors", []),
+            "data": result.get("data") or {},
+            "seconds": seconds,
+        }
+    except ValueError as e:
+        st.error(str(e))
+    except Exception as e:  # API errors, rate limits, etc.
+        st.error(f"L'agent a échoué : {e}")
+
+# ---------- Output + human review ----------
+r = st.session_state.get("result")
+if r:
+    st.divider()
+    st.subheader(f"Résultat : {r['source']}")
+
+    if r["status"] == "auto_approved":
+        st.success("✅ auto_approved : tous les contrôles sont passés")
+    else:
+        st.warning("⚠️ needs_human_review : l'agent n'est pas sûr de lui, une personne doit vérifier")
+
+    c1, c2 = st.columns(2)
+    c1.metric("Tentatives", r["attempts"])
+    c2.metric("Temps de traitement", f"{r['seconds']:.1f} s")
+
+    if r["errors"]:
+        st.markdown("**Erreurs de contrôle**")
+        for err in r["errors"]:
+            st.markdown(f"- {err}")
+
+    d, k = r["data"], r["source"]  # k makes widget keys unique per invoice
+    with st.form(f"review_{k}"):
+        st.markdown("**Champs extraits** (modifiables)")
+        col1, col2 = st.columns(2)
+        supplier = col1.text_input("Fournisseur", d.get("supplier") or "", key=f"sup_{k}")
+        ice = col2.text_input("ICE", d.get("ice") or "", key=f"ice_{k}")
+        number = col1.text_input("Numéro de facture", d.get("invoice_number") or "", key=f"num_{k}")
+        date = col2.text_input("Date (AAAA-MM-JJ)", d.get("date") or "", key=f"date_{k}")
+        ht = col1.number_input("Total HT", value=float(d.get("total_ht") or 0.0), format="%.2f", key=f"ht_{k}")
+        tva = col2.number_input("TVA", value=float(d.get("tva") or 0.0), format="%.2f", key=f"tva_{k}")
+        ttc = col1.number_input("Total TTC", value=float(d.get("total_ttc") or 0.0), format="%.2f", key=f"ttc_{k}")
+        currency = col2.text_input("Devise", d.get("currency") or "MAD", key=f"cur_{k}")
+
+        label = "Valider les données corrigées" if r["status"] != "auto_approved" else "Confirmer les données"
+        submitted = st.form_submit_button(label)
+
+    if submitted:
+        record = {
+            "source": k,
+            "agent_status": r["status"],
+            "approved_at": datetime.now(timezone.utc).isoformat(),
+            "data": {
+                "supplier": supplier, "ice": ice or None, "invoice_number": number or None,
+                "date": date, "total_ht": ht, "tva": tva, "total_ttc": ttc, "currency": currency,
+            },
+        }
+        with open("results/approved.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+        st.success("Enregistré dans results/approved.jsonl")
+        del st.session_state["result"]
