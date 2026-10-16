@@ -1,92 +1,78 @@
-# doc-agent
+# doc-agent : un agent de factures qui sait quand ne pas se fier à lui-même
 
-An invoice-processing agent that **knows when not to trust itself**.
+**Démo en ligne :** [___.streamlit.app](https://___.streamlit.app) · **Vidéo de 2 min :** [voir](___)
 
-It extracts fields from invoice PDFs with an LLM, validates them with deterministic rules, retries once with feedback, and sends anything still doubtful to a human instead of guessing.
+> La démo gratuite se met en veille après une période d'inactivité : le premier chargement peut prendre quelques secondes.
 
-Built with Python, LangGraph and an OpenAI-compatible LLM client (Gemini by default, Ollama as an offline fallback).
+## Le problème
+Les équipes comptables ressaisissent à la main les données des factures. Les erreurs sur les totaux et sur l'identifiant fiscal (ICE) passent à travers et coûtent des heures à retrouver. La plupart des démos d'« extraction par IA » sont impressionnantes jusqu'au jour où un total ne tombe pas juste.
 
-## How it works
+## La solution
+Un agent construit autour du **contrôle**, pas seulement de l'extraction :
 
 ```mermaid
 flowchart LR
-    A[PDF] --> B[Extract text]
-    B --> C[LLM extraction]
-    C --> D{Validate}
-    D -- all checks pass --> E[auto_approved]
-    D -- errors, attempt 1 --> C
-    D -- errors, attempt 2 --> F[needs_human_review]
+    A[Facture PDF] --> B[Extraction des champs par le LLM]
+    B --> C{Contrôle : totaux, ICE, numéro}
+    C -- tous les contrôles passent --> D[Approuvée automatiquement]
+    C -- erreurs, tentative 1 --> B
+    C -- toujours en erreur --> E[Vérification humaine]
 ```
 
-The LLM is one step; code controls the flow. Validation checks:
+Quand un contrôle échoue, les erreurs sont renvoyées au LLM pour une tentative d'auto-correction. Si la facture reste erronée, l'agent **ne devine pas** : il la transmet à une personne, qui corrige les champs dans un formulaire et valide.
 
-- `total_ht + tva = total_ttc` (tolerance 0.05)
-- the ICE (Moroccan company ID) has exactly 15 digits
-- the invoice number is present
-- **grounding:** every extracted ICE, invoice number and amount must actually appear in the PDF text
+## Résultats (12 factures marocaines synthétiques, dont 3 volontairement erronées)
 
-On retry, the validator's errors are sent back to the model. If the invoice itself is faulty, the agent must report what is printed, so it ends in `needs_human_review` instead of being silently "corrected".
+| Indicateur | Version 1 | Version finale |
+|---|---|---|
+| Précision des champs | 97,9 % (94/96) | **100 %** (96/96) |
+| Factures erronées envoyées en vérification humaine | 1 / 3 | **3 / 3** |
+| Factures conformes envoyées en vérification à tort | 0 / 9 | 0 / 9 |
+| Approuvées automatiquement | 11 / 12 | 9 / 12 |
+| Plantages | 0 | 0 |
 
-## Results
+**Ce que montrent ces chiffres.** Dans la version 1, deux factures erronées ont été approuvées automatiquement avec une donnée fausse (un total TTC incorrect, un ICE de la mauvaise longueur). Après la correction des règles de contrôle, ces deux factures sont transmises à une personne. Le taux d'approbation automatique baisse (11 → 9 sur 12), et c'est voulu : une approbation automatique sur une facture fausse coûte plus cher qu'une vérification humaine.
 
-Evaluated on 12 synthetic Moroccan B2B invoices (8 French, 4 English, 3 layouts), 3 of them deliberately faulty (wrong total, 14-digit ICE, missing invoice number). Model: `gemini-3.8-flash`.
+**Traitement par lots en asynchrone** (12 factures, concurrence 4, 3 exécutions) :
 
-| Version | Field accuracy | Faulty invoices routed to review | Auto-approved |
+| Exécution | Séquentiel | Asynchrone | Accélération |
 |---|---|---|---|
-| v1 | 97.92% (94/96) | 1/3 | 91.67% |
-| v1.2 | 100% (96/96) | 3/3 | 75% (9/12) |
+| 1 | 80,9 s | 20,5 s | × 3,9 |
+| 2 | 86,6 s | 19,6 s | × 4,4 |
+| 3 | 74,9 s | 20,6 s | × 3,6 |
 
-**What changed between v1 and v1.2:** in v1 the retry step let the model "fix" faulty invoices: it recomputed a total and invented a valid-looking ICE, so two faulty invoices were auto-approved with fabricated data. v1.2 fixes this with a stricter prompt ("copy exactly as printed, never correct") and the grounding check above. The auto-approved rate dropped because the two wrongly approved invoices are now correctly flagged.
+Accélération médiane : **× 3,9**.
 
-**Limits:** the test set is small and synthetic, written together with the validation rules. Treat the numbers as a regression baseline, not a production claim.
+**Limites à connaître.** Le jeu de test est synthétique (généré avec une vérité terrain connue) et petit (12 factures). Les règles de contrôle ont été corrigées après avoir observé les erreurs de la version 1 sur ces mêmes factures : le résultat de 100 % n'est donc pas une mesure sur des données jamais vues. La précision en conditions réelles doit être mesurée sur les propres documents de chaque client.
 
-## Run it
+![Approuvée automatiquement](docs/approved.png)
+![Vérification humaine requise](docs/review.png)
+![Formulaire de vérification](docs/form.png)
 
+## Architecture et technologies
+- **Orchestration :** machine à états LangGraph (extraction → contrôle → nouvel essai → aiguillage)
+- **Contrôle :** schéma Pydantic + règles métier en Python (HT + TVA = TTC, ICE de 15 chiffres, numéro de facture présent)
+- **LLM :** API compatible OpenAI, configurée par variables d'environnement (Gemini Flash pour les mesures ci-dessus ; OpenAI ou Ollama en local possibles)
+- **Texte des PDF :** PyMuPDF
+- **Interface :** Streamlit (français / anglais), avec un formulaire de vérification humaine modifiable
+- **Traitement par lots :** asyncio avec un sémaphore pour respecter les limites de débit
+- **Déploiement :** Streamlit Community Cloud, clés API dans les secrets de l'application
+
+## Lancer en local
 ```bash
-git clone https://github.com/Acherouid/doc-agent.git
-cd doc-agent
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-cp .env.example .env        # then fill in LLM_API_KEY and LLM_MODEL
-python agent.py data/invoices/invoice_01_atlas_fournitures_industrielles_sarl.pdf
-python eval.py              # full evaluation, saves results/eval_v1.json
-python eval.py --out results/my_run.json --delay 8
+git clone https://github.com/Acherouid/doc-agent && cd doc-agent
+pip install -r requirements.txt   # puis copiez .env.example vers .env et ajoutez votre clé
+streamlit run app.py
 ```
 
-`.env` uses any OpenAI-compatible endpoint:
+Pour reproduire les mesures : `python eval.py` (précision) et `python batch.py` (temps de traitement).
 
-```
-LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
-LLM_API_KEY=your_key_here
-LLM_MODEL=your_model_name
-# Offline fallback with Ollama:
-# LLM_BASE_URL=http://localhost:11434/v1
-# LLM_API_KEY=ollama
-# LLM_MODEL=qwen2.5:7b
-```
+## Ce que j'ajouterais pour la production
+- OCR pour les PDF scannés (modèle de vision ou Tesseract `fra+ara`)
+- Journal d'audit et base de données pour les données approuvées (sur la démo, `results/approved.jsonl` n'est pas conservé entre deux redémarrages)
+- File de tâches (Celery + Redis) pour les gros volumes
+- Un jeu d'évaluation plus large, construit à partir des documents réels du client, avec une partie réservée aux tests uniquement
+- Détection des factures en double et vérification de l'ICE du fournisseur
 
-To regenerate the sample invoices and ground truth: `python generate_invoices.py` (requires `reportlab`).
-
-## Repository layout
-
-```
-agent.py                 LangGraph agent: extract -> validate -> retry -> approve/review
-eval.py                  Evaluation against data/ground_truth.json
-generate_invoices.py     Synthetic invoice and ground-truth generator
-data/invoices/           12 sample PDFs
-data/ground_truth.json   Expected fields and faulty-invoice flags
-results/                 Saved evaluation runs
-```
-
-## Roadmap
-
-- Streamlit demo with a human review screen
-- Async batch processing with timing
-- OCR for scanned PDFs (Tesseract `fra+ara` or a vision model)
-- Larger, real-world (anonymized) evaluation set
-- Audit log and job queue for production use
-
-## License
-
+## Licence
 MIT
