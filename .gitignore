@@ -8,3 +8,5 @@ results/approved.jsonl
 
 # virtual environment (named "invoice")
 /invoice/
+.env
+.streamlit/secrets.toml

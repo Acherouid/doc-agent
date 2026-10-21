@@ -1,0 +1,240 @@
+{
+  "model": "gemini-3.8-flash",
+  "generated_at": "2026-10-18T22:11:29.749142+00:00",
+  "samples": {
+    "invoice_01_atlas_fournitures_industrielles_sarl.pdf": {
+      "sha256": "85b7ef88c09c95495a77a773ef8f805614bef672e9f9bfbd3b6a8894aa4da7f5",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Atlas Fournitures Industrielles SARL",
+          "ice": "009505701000724",
+          "invoice_number": "FA-2026-0780",
+          "date": "2026-05-25",
+          "total_ht": 7826.5,
+          "tva": 1565.3,
+          "total_ttc": 9391.8,
+          "currency": "MAD"
+        },
+        "seconds": 5.9041983490005805
+      }
+    },
+    "invoice_02_maghreb_logistique_transport_sa.pdf": {
+      "sha256": "8e6328e32f6627ca31475717a78814231d1fbc5b2690da3b239dd5717c1a55c7",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Maghreb Logistique & Transport SA",
+          "ice": "009141642000102",
+          "invoice_number": "INV-000219",
+          "date": "2025-11-09",
+          "total_ht": 34225.5,
+          "tva": 6845.1,
+          "total_ttc": 41070.6,
+          "currency": "MAD"
+        },
+        "seconds": 3.011065636999774
+      }
+    },
+    "invoice_03_sahara_tech_solutions_sarl_au.pdf": {
+      "sha256": "22c8f21a17ce29a7cc6111ff4be00698e5efce0d7cab9dc7e7d47b4431ac96bf",
+      "result": {
+        "status": "needs_human_review",
+        "attempts": 2,
+        "errors": [
+          "total_ht + tva does not equal total_ttc"
+        ],
+        "data": {
+          "supplier": "Sahara Tech Solutions SARL AU",
+          "ice": "009614221000545",
+          "invoice_number": "2026/0283",
+          "date": "2026-01-01",
+          "total_ht": 31300.0,
+          "tva": 6260.0,
+          "total_ttc": 37635.0,
+          "currency": "MAD"
+        },
+        "seconds": 13.336973472999489
+      }
+    },
+    "invoice_04_nador_emballages_sarl.pdf": {
+      "sha256": "bd179e34f766ae46d8f739c2467b8349ba15d3c853f6e270d06ec72235b9bf91",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Nador Emballages SARL",
+          "ice": "002794283000892",
+          "invoice_number": "F202500291",
+          "date": "2025-12-09",
+          "total_ht": 22498.0,
+          "tva": 4499.6,
+          "total_ttc": 26997.6,
+          "currency": "MAD"
+        },
+        "seconds": 4.432372690999728
+      }
+    },
+    "invoice_05_dar_al_imprimerie_sarl.pdf": {
+      "sha256": "5cff03b9f1e6439fe3a317aa4fb7fe21b7c013f23dc9ced753c8d95b1d74e085",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Dar Al Imprimerie SARL",
+          "ice": "006886999000136",
+          "invoice_number": "FA-2025-0879",
+          "date": "2025-10-07",
+          "total_ht": 7273.0,
+          "tva": 1454.6,
+          "total_ttc": 8727.6,
+          "currency": "MAD"
+        },
+        "seconds": 4.734231399000237
+      }
+    },
+    "invoice_06_souss_agro_distribution_sa.pdf": {
+      "sha256": "da3fd0af381ad0a4f272a730257d410eafecb4c396dcc2f02e9535532844b122",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Souss Agro Distribution SA",
+          "ice": "002027634000939",
+          "invoice_number": "INV-000280",
+          "date": "2025-11-28",
+          "total_ht": 85319.0,
+          "tva": 17063.8,
+          "total_ttc": 102382.8,
+          "currency": "MAD"
+        },
+        "seconds": 5.761134051999761
+      }
+    },
+    "invoice_07_rif_building_materials_sarl.pdf": {
+      "sha256": "3d47b04dedfa982f79beb70386cb4b25b68527574de9f85d5e04b14477f40668",
+      "result": {
+        "status": "needs_human_review",
+        "attempts": 2,
+        "errors": [
+          "ICE must be exactly 15 digits"
+        ],
+        "data": {
+          "supplier": "Rif Building Materials SARL",
+          "ice": "00148604000358",
+          "invoice_number": "2026/0796",
+          "date": "2026-04-20",
+          "total_ht": 19547.5,
+          "tva": 3909.5,
+          "total_ttc": 23457.0,
+          "currency": "MAD"
+        },
+        "seconds": 10.436786582000423
+      }
+    },
+    "invoice_08_marrakech_office_pro_sarl.pdf": {
+      "sha256": "b87f2e220677f47acbdfb290fb8962ac39113fbd7a530c1ceffa6ecd4e6d8c10",
+      "result": {
+        "status": "needs_human_review",
+        "attempts": 2,
+        "errors": [
+          "invoice_number is missing"
+        ],
+        "data": {
+          "supplier": "Marrakech Office Pro SARL",
+          "ice": "008946087000178",
+          "invoice_number": null,
+          "date": "2026-05-02",
+          "total_ht": 61226.5,
+          "tva": 12245.3,
+          "total_ttc": 73471.8,
+          "currency": "MAD"
+        },
+        "seconds": 8.305053717000192
+      }
+    },
+    "invoice_09_oriental_cleaning_services_sarl.pdf": {
+      "sha256": "8578ce914cb837a320a007925d692ac8872847aa00772d372ce57918c8f3c486",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Oriental Cleaning Services SARL",
+          "ice": "001034247000518",
+          "invoice_number": "FA-2026-0832",
+          "date": "2026-06-28",
+          "total_ht": 14954.5,
+          "tva": 2990.9,
+          "total_ttc": 17945.4,
+          "currency": "MAD"
+        },
+        "seconds": 4.249930904999928
+      }
+    },
+    "invoice_10_meknes_pieces_auto_sarl.pdf": {
+      "sha256": "a89d5f9fe4c6cddeda44d5e9948deae8501b2ae82714cd09d313def22d219727",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Meknès Pièces Auto SARL",
+          "ice": "004556427000149",
+          "invoice_number": "INV-000247",
+          "date": "2026-05-27",
+          "total_ht": 29386.0,
+          "tva": 5877.2,
+          "total_ttc": 35263.2,
+          "currency": "MAD"
+        },
+        "seconds": 2.7242294220004624
+      }
+    },
+    "invoice_11_anfa_consulting_group_sa.pdf": {
+      "sha256": "53c4ac0094a32f8c8984d908bfa964be0c5cf10f5ff7ff5a33baca7e272de156",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Anfa Consulting Group SA",
+          "ice": "004279781000131",
+          "invoice_number": "2026/0517",
+          "date": "2026-05-05",
+          "total_ht": 47326.0,
+          "tva": 9465.2,
+          "total_ttc": 56791.2,
+          "currency": "MAD"
+        },
+        "seconds": 5.618460747999961
+      }
+    },
+    "invoice_12_zagora_solar_energy_sarl.pdf": {
+      "sha256": "8df9a3661aa9e67ab1b94fccd8098bfa4150486a932792d96830fd2d9e1588f8",
+      "result": {
+        "status": "auto_approved",
+        "attempts": 1,
+        "errors": [],
+        "data": {
+          "supplier": "Zagora Solar Energy SARL",
+          "ice": "001883469000622",
+          "invoice_number": "F202600775",
+          "date": "2026-05-07",
+          "total_ht": 279981.5,
+          "tva": 55996.3,
+          "total_ttc": 335977.8,
+          "currency": "MAD"
+        },
+        "seconds": 5.388457365000249
+      }
+    }
+  }
+}

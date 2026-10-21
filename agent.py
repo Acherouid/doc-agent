@@ -4,26 +4,60 @@ import pymupdf
 from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError, field_validator
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, START, END
 
-# load_dotenv()
-# client = OpenAI(base_url=os.environ["LLM_BASE_URL"], api_key=os.environ["LLM_API_KEY"])
-# MODEL = os.environ["LLM_MODEL"]
-# MAX_ATTEMPTS = 2
-
 load_dotenv(override=True)
-BASE_URL = os.environ["LLM_BASE_URL"]
-client = OpenAI(base_url=BASE_URL, api_key=os.environ["LLM_API_KEY"])
-MODEL = os.environ["LLM_MODEL"]
-MAX_ATTEMPTS = 2
-if "googleapis.com" in BASE_URL:
-    PROVIDER = "gemini"
-elif "11434" in BASE_URL or "localhost" in BASE_URL:
-    PROVIDER = "ollama"
-else:
-    PROVIDER = "other"
-print(f"[LLM] provider={PROVIDER} model={MODEL} url={BASE_URL}", file=sys.stderr)
 
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+MAX_ATTEMPTS = 2
+
+
+# ---------------------------------------------------------------------------
+# LLM access. No client is created at import time any more: the Streamlit app
+# builds one per request (visitor's own key, or your key for invite codes).
+# ---------------------------------------------------------------------------
+def make_client(api_key: str, base_url: Optional[str] = None) -> OpenAI:
+    return OpenAI(base_url=base_url or GEMINI_BASE_URL, api_key=api_key)
+
+
+_env_llm = None
+
+
+def llm_from_env():
+    """(client, model) from LLM_* environment variables. Used by the CLI,
+    eval.py, batch.py... whenever no client is passed explicitly."""
+    global _env_llm
+    if _env_llm is None:
+        _env_llm = (
+            make_client(os.environ["LLM_API_KEY"], os.environ.get("LLM_BASE_URL")),
+            os.environ["LLM_MODEL"],
+        )
+    return _env_llm
+
+
+def provider_name() -> str:
+    url = os.environ.get("LLM_BASE_URL", "")
+    if "googleapis.com" in url:
+        return "gemini"
+    if "11434" in url or "localhost" in url:
+        return "ollama"
+    return "other"
+
+
+def _parse_amount(tok: str):
+    t = tok.replace(" ", "").replace(" ", "")
+    if "," in t and "." in t:
+        dec = "," if t.rfind(",") > t.rfind(".") else "."
+        t = t.replace("." if dec == "," else ",", "").replace(dec, ".")
+    elif "," in t:
+        t = t.replace(",", ".") if len(t.split(",")[-1]) <= 2 else t.replace(",", "")
+    elif "." in t and len(t.split(".")[-1]) == 3:
+        t = t.replace(".", "")
+    try:
+        return float(t)
+    except ValueError:
+        return None
 
 
 class Invoice(BaseModel):
@@ -36,19 +70,21 @@ class Invoice(BaseModel):
     total_ttc: float
     currency: str = "MAD"
 
+    @field_validator("total_ht", "tva", "total_ttc", mode="before")
+    @classmethod
+    def parse_french_amount(cls, v):
+        if isinstance(v, str):
+            cleaned = v.replace("MAD", "").replace("DH", "").strip()
+            parsed = _parse_amount(cleaned)
+            return parsed if parsed is not None else v
+        return v
+
 class State(TypedDict, total=False):
     text: str
     data: dict
     errors: list[str]
     attempts: int
     status: str
-
-# PROMPT = """You extract data from invoices (French or English).
-# Return ONLY a JSON object with keys: supplier, ice, invoice_number, date (YYYY-MM-DD),
-# total_ht, tva, total_ttc, currency. Use null if a field is absent. Numbers without spaces or currency symbols.
-# {feedback}
-# INVOICE TEXT:
-# {text}"""
 
 
 PROMPT = """You extract data from invoices (French or English).
@@ -69,30 +105,26 @@ Rules:
 INVOICE TEXT:
 {text}"""
 
-@field_validator("total_ht", "tva", "total_ttc", mode="before")
-@classmethod
-def parse_french_amount(cls, v):
-    if isinstance(v, str):
-        cleaned = v.replace("MAD", "").replace("DH", "").strip()
-        parsed = _parse_amount(cleaned)   # defined further down in the file, that's fine at runtime
-        return parsed if parsed is not None else v
-    return v
-
 def pdf_to_text(path: str) -> str:
     with pymupdf.open(path) as doc:
         return "\n".join(page.get_text() for page in doc)
 
-def extract(state: State) -> State:
+def extract(state: State, config: RunnableConfig) -> State:
+    cfg = (config or {}).get("configurable", {})
+    if cfg.get("client") is not None and cfg.get("model"):
+        client, model = cfg["client"], cfg["model"]
+    else:
+        client, model = llm_from_env()  # backward compatible: app.invoke({"text": ...})
+
     feedback = ""
     if state.get("errors"):
-        # feedback = "Your previous answer had these problems: " + "; ".join(state["errors"]) + ". Re-read the invoice and fix them."
         feedback = (
-    "A validation check flagged these issues: " + "; ".join(state["errors"]) + ". "
-    "Re-read the invoice text. Change a value ONLY if you misread it. "
-    "If the invoice itself prints these values, return exactly what is printed, even if it looks wrong."
-)
+            "A validation check flagged these issues: " + "; ".join(state["errors"]) + ". "
+            "Re-read the invoice text. Change a value ONLY if you misread it. "
+            "If the invoice itself prints these values, return exactly what is printed, even if it looks wrong."
+        )
     resp = client.chat.completions.create(
-        model=MODEL,
+        model=model,
         temperature=0,
         response_format={"type": "json_object"},  # remove if your provider rejects it
         messages=[{"role": "user", "content": PROMPT.format(feedback=feedback, text=state["text"][:12000])}],
@@ -107,20 +139,6 @@ def extract(state: State) -> State:
 
 def _compact(s: str) -> str:
     return re.sub(r"[\s\u00a0]", "", s).casefold()
-
-def _parse_amount(tok: str):
-    t = tok.replace("\u00a0", "").replace(" ", "")
-    if "," in t and "." in t:
-        dec = "," if t.rfind(",") > t.rfind(".") else "."
-        t = t.replace("." if dec == "," else ",", "").replace(dec, ".")
-    elif "," in t:
-        t = t.replace(",", ".") if len(t.split(",")[-1]) <= 2 else t.replace(",", "")
-    elif "." in t and len(t.split(".")[-1]) == 3:
-        t = t.replace(".", "")
-    try:
-        return float(t)
-    except ValueError:
-        return None
 
 def _amounts_in(text: str) -> list[float]:
     toks = re.findall(r"\d[\d \u00a0.,]*\d|\d", text)
@@ -154,8 +172,8 @@ def route(state: State) -> str:
 graph = StateGraph(State)
 graph.add_node("extract", extract)
 graph.add_node("validate", validate)
-graph.add_node("approve", lambda s: {"status": "auto_approved"})
-graph.add_node("review", lambda s: {"status": "needs_human_review"})
+graph.add_node("approve", lambda _: {"status": "auto_approved"})
+graph.add_node("review", lambda _: {"status": "needs_human_review"})
 graph.add_edge(START, "extract")
 graph.add_edge("extract", "validate")
 graph.add_conditional_edges("validate", route, {"extract": "extract", "approve": "approve", "review": "review"})
@@ -163,7 +181,15 @@ graph.add_edge("approve", END)
 graph.add_edge("review", END)
 app = graph.compile()
 
+
+def run(text: str, client=None, model: Optional[str] = None) -> dict:
+    """Run the agent. Pass client+model for per-request keys; omit both to use the env."""
+    cfg = {"configurable": {"client": client, "model": model}} if client is not None else None
+    return app.invoke({"text": text}, config=cfg)
+
+
 if __name__ == "__main__":
-    import sys
-    result = app.invoke({"text": pdf_to_text(sys.argv[1])})
-    print(json.dumps({"llm": f"{PROVIDER}/{MODEL}", **{k: result.get(k) for k in ("status", "attempts", "errors", "data")}}, indent=2, ensure_ascii=False))
+    client, model = llm_from_env()
+    print(f"[LLM] provider={provider_name()} model={model}", file=sys.stderr)
+    result = run(pdf_to_text(sys.argv[1]), client, model)
+    print(json.dumps({"llm": f"{provider_name()}/{model}", **{k: result.get(k) for k in ("status", "attempts", "errors", "data")}}, indent=2, ensure_ascii=False))
